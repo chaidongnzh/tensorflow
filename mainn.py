@@ -27,6 +27,8 @@ import os
 import sys
 import ast
 import json
+import logging
+
 
 import tensorflow as tf
 
@@ -238,6 +240,7 @@ def main(_):
 
 
 if __name__ == '__main__':
+  logging.getLogger().setLevel(logging.INFO)
   parser = argparse.ArgumentParser()
   parser.add_argument('--fake_data', nargs='?', const=True, type=bool,
                       default=False,
@@ -261,4 +264,5 @@ if __name__ == '__main__':
                            'tensorflow/logs'),
       help='Summaries log directory')
   FLAGS, unparsed = parser.parse_known_args()
+  logging.info("Flags %s",FLAGS)
   tf.app.run(main=main)
