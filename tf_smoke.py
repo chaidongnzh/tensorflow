@@ -4,10 +4,14 @@ Only the master assigns ops to devices/workers.
 The master will assign ops to every task in the cluster. This way we can verify
 that distributed training is working by executing ops on all devices.
 """
-import argparse
-import json
+
+
 import logging
+import argparse
 import os
+import sys
+import ast
+import json
 
 import tensorflow as tf
 
