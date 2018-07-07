@@ -4,10 +4,14 @@ Only the master assigns ops to devices/workers.
 The master will assign ops to every task in the cluster. This way we can verify
 that distributed training is working by executing ops on all devices.
 """
-import argparse
-import json
+
+
 import logging
+import argparse
 import os
+import sys
+import ast
+import json
 
 import tensorflow as tf
 
@@ -134,4 +138,27 @@ def main():
 
 if __name__ == "__main__":
   logging.getLogger().setLevel(logging.INFO)
-  main()
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--fake_data', nargs='?', const=True, type=bool,
+                      default=False,
+                      help='If true, uses fake data for unit testing.')
+  parser.add_argument('--max_steps', type=int, default=1000,
+                      help='Number of steps to run trainer.')
+  parser.add_argument('--learning_rate', type=float, default=0.001,
+                      help='Initial learning rate')
+  parser.add_argument('--dropout', type=float, default=0.9,
+                      help='Keep probability for training dropout.')
+  parser.add_argument(
+      '--data_dir',
+      type=str,
+      default=os.path.join(os.getenv('TEST_TMPDIR', '/tmp'),
+                           'tensorflow/mnist/input_data'),
+      help='Directory for storing input data')
+  parser.add_argument(
+      '--log_dir',
+      type=str,
+      default=os.path.join(os.getenv('TEST_TMPDIR', '/tmp'),
+                           'tensorflow/mnist/logs/mnist_with_summaries'),
+      help='Summaries log directory')
+  FLAGS, unparsed = parser.parse_known_args()
+  tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
